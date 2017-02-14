@@ -5,17 +5,15 @@ apache:
     links:
         - phpfpm
     volumes:
-        - ./public_html:/var/www/html
-        - ./conf/apache.conf:/etc/apache2/conf.d/default.conf
+        - ./public_html:/usr/local/apache2/htdocs/
+        - ./conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
 
 phpfpm:
     image: php:fpm
-    ports:
-        - "9045:9000"
     volumes:
-        - ./public_html:/var/www/html
+        - ./public_html:/usr/local/apache2/htdocs/
 
-mysql:
-  image: mariadb
-  environment:
-    MYSQL_ROOT_PASSWORD: admin
+#mysql:
+#  image: mariadb
+#  environment:
+#    MYSQL_ROOT_PASSWORD: admin
