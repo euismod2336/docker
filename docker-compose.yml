@@ -1,0 +1,21 @@
+apache:
+    image: httpd:alpine
+    ports:
+        - "80:80"
+    links:
+        - phpfpm
+    volumes:
+        - ./public_html:/var/www/html
+        - ./conf/apache.conf:/etc/apache2/conf.d/default.conf
+
+phpfpm:
+    image: php:fpm
+    ports:
+        - "9045:9000"
+    volumes:
+        - ./public_html:/var/www/html
+
+mysql:
+  image: mariadb
+  environment:
+    MYSQL_ROOT_PASSWORD: admin
