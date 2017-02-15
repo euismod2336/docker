@@ -1,19 +1,24 @@
-apache:
+version: "3"
+
+services:
+   apache:
     image: httpd:alpine
     ports:
-        - "80:80"
+      - "80:80"
     links:
-        - phpfpm
+      - phpfpm
     volumes:
-        - ./public_html:/usr/local/apache2/htdocs/
-        - ./conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./public_html:/usr/local/apache2/htdocs/
+      - ./conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
+    environment:
+      - FASTCGI=fcgi://phpfpm:9000
 
-phpfpm:
-    image: php:fpm
+   phpfpm:
+    build:
+      context: .
+      #dockerfile: ./conf/php5
+      dockerfile: ./conf/php7
+
     volumes:
-        - ./public_html:/usr/local/apache2/htdocs/
-
-#mysql:
-#  image: mariadb
-#  environment:
-#    MYSQL_ROOT_PASSWORD: admin
+      - ./public_html:/usr/local/apache2/htdocs/
+      - ./conf/php.ini:/usr/local/etc/php/conf.d/50-setting.ini
