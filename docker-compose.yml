@@ -33,3 +33,5 @@ services:
       - MYSQL_DATABASE=dbname
       - MYSQL_USER=dbuser
       - MYSQL_PASSWORD=123
+    ports:
+      - "6087:3306"
