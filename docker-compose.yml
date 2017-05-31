@@ -34,4 +34,4 @@ services:
       - MYSQL_USER=dbuser
       - MYSQL_PASSWORD=123
     ports:
-      - "6087:3306"
+      - "6080:3306"
