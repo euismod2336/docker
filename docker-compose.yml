@@ -7,6 +7,7 @@ services:
       - "8080:80"
     links:
       - phpfpm
+      - db
     volumes:
       - ./public_html:/usr/local/apache2/htdocs/
       - ./conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
@@ -22,3 +23,13 @@ services:
     volumes:
       - ./public_html:/usr/local/apache2/htdocs/
       - ./conf/php.ini:/usr/local/etc/php/conf.d/50-setting.ini
+
+   db:
+    image: mysql:latest
+    volumes:
+      - ./conf/db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=123
+      - MYSQL_DATABASE=dbname
+      - MYSQL_USER=dbuser
+      - MYSQL_PASSWORD=123
