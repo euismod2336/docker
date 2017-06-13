@@ -13,12 +13,13 @@ services:
       - ./conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
     environment:
       - FASTCGI=fcgi://phpfpm:9000
+    hostname: awesome.dev
 
    phpfpm:
     build:
       context: .
-      #dockerfile: ./conf/php5
-      dockerfile: ./conf/php7
+      dockerfile: ./conf/php5
+      #dockerfile: ./conf/php7
 
     volumes:
       - ./public_html:/usr/local/apache2/htdocs/
