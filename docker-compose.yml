@@ -45,4 +45,4 @@ networks:
   static-network:
     ipam:
       config:
-        - subnet: 172.0.0.0/16
+        - subnet: 172.0.0.0/28
