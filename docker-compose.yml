@@ -10,11 +10,11 @@ services:
       - ./public_html:/usr/local/apache2/htdocs/
       - ./conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
     environment:
-      - FASTCGI=fcgi://172.0.0.6:9000
+      - FASTCGI=fcgi://192.168.0.6:9000
     hostname: awesome.dev
     networks:
       static-network:
-        ipv4_address: 172.0.0.5
+        ipv4_address: 192.168.0.5
 
    phpfpm:
     build:
@@ -26,7 +26,7 @@ services:
       - ./conf/php.ini:/usr/local/etc/php/conf.d/50-setting.ini
     networks:
       static-network:
-        ipv4_address: 172.0.0.6
+        ipv4_address: 192.168.0.6
 
    db:
     image: mysql:latest
@@ -39,10 +39,10 @@ services:
       - MYSQL_PASSWORD=123
     networks:
       static-network:
-        ipv4_address: 172.0.0.7
+        ipv4_address: 192.168.0.7
 
 networks:
   static-network:
     ipam:
       config:
-        - subnet: 172.0.0.0/28
+        - subnet: 192.168.0.0/28
