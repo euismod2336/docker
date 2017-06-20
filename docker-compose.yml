@@ -10,7 +10,7 @@ services:
       - ./public_html:/usr/local/apache2/htdocs/
       - ./conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
     environment:
-      - FASTCGI=fcgi://192.168.0.6:9000
+      - FASTCGI=fcgi://phpfpm:9000
     hostname: awesome.dev
     networks:
       static-network:
