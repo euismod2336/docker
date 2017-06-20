@@ -11,22 +11,21 @@ services:
       - ./conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
     environment:
       - FASTCGI=fcgi://phpfpm:9000
-    hostname: awesome.dev
+    hostname: "${HOSTNAME}"
     networks:
       static-network:
-        ipv4_address: 192.168.0.5
+        ipv4_address: "${IPADDRESS}.5"
 
    phpfpm:
     build:
       context: .
-      dockerfile: ./conf/php5
-      #dockerfile: ./conf/php7
+      dockerfile: "./conf/php${PHP}"
     volumes:
       - ./public_html:/usr/local/apache2/htdocs/
       - ./conf/php.ini:/usr/local/etc/php/conf.d/50-setting.ini
     networks:
       static-network:
-        ipv4_address: 192.168.0.6
+        ipv4_address: "${IPADDRESS}.6"
 
    db:
     image: mysql:latest
@@ -39,10 +38,10 @@ services:
       - MYSQL_PASSWORD=123
     networks:
       static-network:
-        ipv4_address: 192.168.0.7
+        ipv4_address: "${IPADDRESS}.7"
 
 networks:
   static-network:
     ipam:
       config:
-        - subnet: 192.168.0.0/28
+        - subnet: "${IPADDRESS}.0/28"
