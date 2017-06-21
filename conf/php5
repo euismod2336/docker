@@ -1,5 +1,9 @@
 FROM php:5-fpm-alpine
-RUN apk add --no-cache freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev \
+RUN apk add --no-cache freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev g++ make autoconf \
+	&& docker-php-source extract \
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug \
+    && docker-php-source delete \
 	&& docker-php-ext-install mysqli \
 	&& docker-php-ext-install gd \
     && rm -rf /var/cache/apk/*
