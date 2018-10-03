@@ -28,7 +28,7 @@ services:
         ipv4_address: "${IPADDRESS}.6"
 
    db:
-    image: mysql:latest
+    image: mysql:5.7
     volumes:
       - ./conf/db:/var/lib/mysql
     environment:
