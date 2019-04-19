@@ -8,7 +8,7 @@ services:
       - db
     volumes:
       - ./public_html:/usr/local/apache2/htdocs/
-      - ./conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./docker/httpd.conf:/usr/local/apache2/conf/httpd.conf
     environment:
       - FASTCGI=fcgi://phpfpm:9000
     hostname: "${HOSTNAME}"
@@ -22,7 +22,7 @@ services:
       dockerfile: "./conf/php${PHP}"
     volumes:
       - ./public_html:/usr/local/apache2/htdocs/
-      - ./conf/php.ini:/usr/local/etc/php/conf.d/50-setting.ini
+      - ./docker/php.ini:/usr/local/etc/php/conf.d/50-setting.ini
     networks:
       static-network:
         ipv4_address: "${IPADDRESS}.6"
@@ -30,7 +30,7 @@ services:
    db:
     image: mysql:5.7
     volumes:
-      - ./conf/db:/var/lib/mysql
+      - ./docker/db:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=123
       - MYSQL_DATABASE=dbname
