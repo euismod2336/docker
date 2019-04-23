@@ -19,7 +19,7 @@ services:
    phpfpm:
     build:
       context: .
-      dockerfile: "./conf/php${PHP}"
+      dockerfile: "./docker/php${PHP}"
     volumes:
       - ./public_html:/usr/local/apache2/htdocs/
       - ./docker/php.ini:/usr/local/etc/php/conf.d/50-setting.ini
