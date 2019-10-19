@@ -17,7 +17,7 @@ services:
    phpfpm:
     build:
       context: .
-      dockerfile: ./conf/php7
+      dockerfile: ./docker/php7
     volumes:
       - ./public_html:/usr/local/apache2/htdocs/
       - ./docker/php.ini:/usr/local/etc/php/conf.d/50-setting.ini
@@ -28,7 +28,7 @@ services:
    db:
      image: mysql:5.7
      volumes:
-       - ./conf/db:/var/lib/mysql
+       - ./docker/db:/var/lib/mysql
      environment:
        - MYSQL_ROOT_PASSWORD=123
        - MYSQL_DATABASE=dbname
