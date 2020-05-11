@@ -1,14 +1,11 @@
-FROM php:fpm-alpine
-RUN apk add --no-cache freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev g++ make autoconf \
-    && docker-php-source extract \
+FROM php:7-fpm-alpine
+RUN apk add --no-cache freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev g++ make autoconf zip libzip-dev \
+   && docker-php-source extract \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug \
-    && docker-php-ext-install mysqli pdo_mysql iconv \
-    && docker-php-ext-enable pdo_mysql iconv \
-    && docker-php-ext-configure gd \
-        --with-freetype-dir=/usr/include/ \
-        --with-png-dir=/usr/include/ \
-        --with-jpeg-dir=/usr/include/ \
-    &&  NPROC=$(getconf _NPROCESSORS_ONLN) \
-    &&  docker-php-ext-install -j${NPROC} gd \
-    &&  apk del --no-cache freetype-dev libpng-dev libjpeg-turbo-dev
+    && docker-php-ext-configure zip --with-libzip \
+   && docker-php-ext-install zip \
+   && docker-php-ext-install pdo_mysql \
+   && docker-php-ext-install mysqli \
+   && docker-php-ext-install gd \
+    && rm -rf /var/cache/apk/*
