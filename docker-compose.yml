@@ -6,7 +6,6 @@ services:
     volumes:
       - ./public_html:/usr/local/apache2/htdocs/
       - ./docker/httpd.conf:/usr/local/apache2/conf/httpd.conf
-      - ./submodules:/usr/local/apache2/submodules/
     environment:
       - FASTCGI=fcgi://phpfpm:9000
     hostname: "${HOSTNAME}"
@@ -21,68 +20,83 @@ services:
     volumes:
       - ./public_html:/usr/local/apache2/htdocs/
       - ./docker/php.ini:/usr/local/etc/php/conf.d/50-setting.ini
-      - ./submodules:/usr/local/apache2/submodules/
     networks:
       static-network:
         ipv4_address: "${IPADDRESS}.6"
-   db:
-     image: mysql:5.7
-     volumes:
-       - ./docker/db:/var/lib/mysql
-     environment:
-       - MYSQL_ROOT_PASSWORD=123
-       - MYSQL_DATABASE=dbname
-       - MYSQL_USER=dbuser
-       - MYSQL_PASSWORD=123
-     networks:
-       static-network:
-         ipv4_address: "${IPADDRESS}.10"
 
-   elasticsearch1:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.3.0
-    environment:
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - "http.max_initial_line_length:8kb"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - ./docker/elasticsearch1:/usr/share/elasticsearch/data
-    networks:
-      static-network:
-        ipv4_address: "${IPADDRESS}.7"
+    db:
+        image: mariadb:10.6.2
+        volumes:
+            - ./docker/db:/var/lib/mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=123
+            - MYSQL_DATABASE=dbname
+            - MYSQL_USER=dbuser
+            - MYSQL_PASSWORD=123
+        networks:
+            static-network:
+                ipv4_address: "${IPADDRESS}.10"
 
-   elasticsearch2:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.3.0
-    environment:
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - "discovery.zen.ping.unicast.hosts=elasticsearch1"
-      - "http.max_initial_line_length:8kb"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - ./docker/elasticsearch2:/usr/share/elasticsearch/data
-    networks:
-      static-network:
-        ipv4_address: "${IPADDRESS}.8"
+#    db:
+#      image: mysql:5
+#      ulimits:
+#        nofile: 102400
+#      volumes:
+#        - ./docker/mysql:/var/lib/mysql
+#      environment:
+#        - MYSQL_ROOT_PASSWORD=123
+#        - MYSQL_DATABASE=dbname
+#        - MYSQL_USER=dbuser
+#        - MYSQL_PASSWORD=123
+#      networks:
+#        static-network:
+#          ipv4_address: "${IPADDRESS}.10"
 
-   kibana:
-    image: docker.elastic.co/kibana/kibana-oss:6.3.0
-    environment:
-      SERVER_NAME: "kibana.${HOSTNAME}"
-      ELASTICSEARCH_URL: http://${IPADDRESS}.7:9200
-      ELASTICSEARCH_USERNAME: "elastic"
-      ELASTICSEARCH_PASSWORD: "changeme"
-    networks:
-      static-network:
-        ipv4_address: "${IPADDRESS}.9"
+#   elasticsearch1:
+#    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.3.0
+#    environment:
+#      - cluster.name=docker-cluster
+#      - bootstrap.memory_lock=true
+#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#      - "http.max_initial_line_length:8kb"
+#    ulimits:
+#      memlock:
+#        soft: -1
+#        hard: -1
+#    volumes:
+#      - ./docker/elasticsearch1:/usr/share/elasticsearch/data
+#    networks:
+#      static-network:
+#        ipv4_address: "${IPADDRESS}.7"
+#
+#   elasticsearch2:
+#    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.3.0
+#    environment:
+#      - cluster.name=docker-cluster
+#      - bootstrap.memory_lock=true
+#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#      - "discovery.zen.ping.unicast.hosts=elasticsearch1"
+#      - "http.max_initial_line_length:8kb"
+#    ulimits:
+#      memlock:
+#        soft: -1
+#        hard: -1
+#    volumes:
+#      - ./docker/elasticsearch2:/usr/share/elasticsearch/data
+#    networks:
+#      static-network:
+#        ipv4_address: "${IPADDRESS}.8"
+#
+#   kibana:
+#    image: docker.elastic.co/kibana/kibana-oss:6.3.0
+#    environment:
+#      SERVER_NAME: "kibana.${HOSTNAME}"
+#      ELASTICSEARCH_URL: http://${IPADDRESS}.7:9200
+#      ELASTICSEARCH_USERNAME: "elastic"
+#      ELASTICSEARCH_PASSWORD: "changeme"
+#    networks:
+#      static-network:
+#        ipv4_address: "${IPADDRESS}.9"
 
 networks:
   static-network:
