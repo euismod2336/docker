@@ -6,6 +6,8 @@ services:
     volumes:
       - ./public_html:/usr/local/apache2/htdocs/
       - ./docker/httpd.conf:/usr/local/apache2/conf/httpd.conf
+        - ./docker/local.www.nl-key.pem:/key
+        - ./docker/local.www.nl.pem:/cert
     environment:
       - FASTCGI=fcgi://phpfpm:9000
     hostname: "${HOSTNAME}"
