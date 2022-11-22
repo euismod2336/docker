@@ -1,10 +1,10 @@
-FROM php:7.4.27-fpm-alpine
-RUN apk add --no-cache imagemagick imagemagick-dev bash pngcrush optipng=0.7.7-r0 zlib-dev icu-dev freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev g++ make autoconf php7-zip libzip-dev \
+FROM php:8-fpm-alpine
+RUN apk add --no-cache imagemagick imagemagick-dev bash pngcrush optipng=0.7.7-r0 zlib-dev icu-dev freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev g++ make autoconf libzip-dev \
     && docker-php-source extract \
     && pecl install xdebug imagick \
     && docker-php-ext-enable xdebug imagick \
-    && docker-php-ext-install mysqli pdo_mysql iconv zip \
-    && docker-php-ext-enable pdo_mysql iconv zip \
+    && docker-php-ext-install mysqli pdo_mysql zip bcmath \
+    && docker-php-ext-enable pdo_mysql zip \
     && docker-php-ext-configure intl \
     && docker-php-ext-install intl \
     && docker-php-ext-configure gd \

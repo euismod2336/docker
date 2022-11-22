@@ -6,14 +6,15 @@ services:
     volumes:
       - ./public_html:/usr/local/apache2/htdocs/
       - ./docker/httpd.conf:/usr/local/apache2/conf/httpd.conf
-      - ./docker/local.www.nl-key.pem:/key
-      - ./docker/local.www.nl.pem:/cert
+
+      # After mkcert, move the files and name them accordingly
+      #- ./docker/local.www.nl-key.pem:/key
+      #- ./docker/local.www.nl.pem:/cert
     environment:
       - FASTCGI=fcgi://phpfpm:9000
-    hostname: "${HOSTNAME}"
     networks:
       static-network:
-        ipv4_address: "${IPADDRESS}.5"
+        ipv4_address: "192.168.0.5"
 
    phpfpm:
     build:
@@ -22,9 +23,22 @@ services:
     volumes:
       - ./public_html:/usr/local/apache2/htdocs/
       - ./docker/php.ini:/usr/local/etc/php/conf.d/50-setting.ini
+
+      # Uncomment for Craft
+      #- ./vendor:/usr/local/apache2/vendor/
+      #- ./config:/usr/local/apache2/config/
+      #- ./storage:/usr/local/apache2/storage/
+      #- ./modules:/usr/local/apache2/modules/
+      #- ./plugins:/usr/local/apache2/plugins/
+      #- ./templates:/usr/local/apache2/templates/
+      #- ./.env:/usr/local/apache2/.env
+      #- ./craft:/usr/local/apache2/craft
+      #- ./composer.json:/usr/local/apache2/composer.json
+      #- ./composer.lock:/usr/local/apache2/composer.lock
+      #- ./docker/composer.phar:/usr/local/apache2/composer
     networks:
       static-network:
-        ipv4_address: "${IPADDRESS}.6"
+        ipv4_address: "192.168.0.6"
 
     db:
         image: mariadb:10.6.2
@@ -37,10 +51,11 @@ services:
             - MYSQL_PASSWORD=123
         networks:
             static-network:
-                ipv4_address: "${IPADDRESS}.10"
+                ipv4_address: "192.168.0.10"
 
 #    db:
 #      image: mysql:5
+#      command: --sql_mode=""
 #      ulimits:
 #        nofile: 102400
 #      volumes:
@@ -52,7 +67,7 @@ services:
 #        - MYSQL_PASSWORD=123
 #      networks:
 #        static-network:
-#          ipv4_address: "${IPADDRESS}.10"
+#          ipv4_address: "192.168.0.10"
 
 #   elasticsearch1:
 #    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.3.0
@@ -69,7 +84,7 @@ services:
 #      - ./docker/elasticsearch1:/usr/share/elasticsearch/data
 #    networks:
 #      static-network:
-#        ipv4_address: "${IPADDRESS}.7"
+#        ipv4_address: "192.168.0.7"
 #
 #   elasticsearch2:
 #    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.3.0
@@ -87,7 +102,7 @@ services:
 #      - ./docker/elasticsearch2:/usr/share/elasticsearch/data
 #    networks:
 #      static-network:
-#        ipv4_address: "${IPADDRESS}.8"
+#        ipv4_address: "192.168.0.8"
 #
 #   kibana:
 #    image: docker.elastic.co/kibana/kibana-oss:6.3.0
@@ -98,11 +113,11 @@ services:
 #      ELASTICSEARCH_PASSWORD: "changeme"
 #    networks:
 #      static-network:
-#        ipv4_address: "${IPADDRESS}.9"
+#        ipv4_address: "192.168.0.9"
 
 networks:
   static-network:
     ipam:
       config:
-        - subnet: "${IPADDRESS}.0/28"
+        - subnet: "192.168.0.0/28"
 
