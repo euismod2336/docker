@@ -4,7 +4,7 @@ services:
    apache:
     image: httpd:alpine
     volumes:
-      - ./public_html:/usr/local/apache2/htdocs/
+      - ./web:/usr/local/apache2/htdocs/
       - ./docker/httpd.conf:/usr/local/apache2/conf/httpd.conf
 
       # After mkcert, move the files and name them accordingly
@@ -21,7 +21,7 @@ services:
       context: .
       dockerfile: ./docker/php
     volumes:
-      - ./public_html:/usr/local/apache2/htdocs/
+      - ./web:/usr/local/apache2/htdocs/
       - ./docker/php.ini:/usr/local/etc/php/conf.d/50-setting.ini
 
       # Uncomment for Craft

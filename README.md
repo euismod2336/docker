@@ -44,3 +44,6 @@ Run mkcert for your domain and add the keys to the place as given in the docker-
 
 ## Run
 run `docker-compose up`. Happy coding.
+
+## Craft CMS
+Download an archive file from craftcms.com. Extract the archive in the root (so craft and composer files are alongside the docker-compose file). You can modify the web folder to public_html (keep in mind to update the docker-compose.yml in that case). You can now run `docker-compose up` and follow the rest of the installation instructions from the php container.
