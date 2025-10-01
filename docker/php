@@ -13,3 +13,8 @@ RUN apk add --no-cache linux-headers imagemagick libwebp-dev libxpm-dev imagemag
     &&  apk del --no-cache freetype-dev libpng-dev libjpeg-turbo-dev
 
 WORKDIR /usr/local/apache2/
+
+RUN addgroup -g 1000 dockeruser && \
+   adduser -D -u 1000 -G dockeruser dockeruser
+
+USER dockeruser
