@@ -1,74 +1,70 @@
-version: "3"
-
 services:
    apache:
     image: httpd:alpine
     volumes:
-      - ./web:/usr/local/apache2/htdocs/
+      - ./:/usr/local/apache2/
       - ./docker/httpd.conf:/usr/local/apache2/conf/httpd.conf
-
-      # After mkcert, move the files and name them accordingly
-      #- ./docker/local.www.nl-key.pem:/key
-      #- ./docker/local.www.nl.pem:/cert
+      - ./docker/local.www.nl-key.pem:/key
+      - ./docker/local.www.nl.pem:/cert
     environment:
       - FASTCGI=fcgi://phpfpm:9000
     networks:
       static-network:
-        ipv4_address: "192.168.0.5"
+        ipv4_address: 192.168.0.5
 
    phpfpm:
     build:
       context: .
       dockerfile: ./docker/php
     volumes:
-      - ./web:/usr/local/apache2/htdocs/
+      - ./:/usr/local/apache2/
       - ./docker/php.ini:/usr/local/etc/php/conf.d/50-setting.ini
-
-      # Uncomment for Craft
-      #- ./vendor:/usr/local/apache2/vendor/
-      #- ./config:/usr/local/apache2/config/
-      #- ./storage:/usr/local/apache2/storage/
-      #- ./modules:/usr/local/apache2/modules/
-      #- ./plugins:/usr/local/apache2/plugins/
-      #- ./templates:/usr/local/apache2/templates/
-      #- ./.env:/usr/local/apache2/.env
-      #- ./craft:/usr/local/apache2/craft
-      #- ./composer.json:/usr/local/apache2/composer.json
-      #- ./composer.lock:/usr/local/apache2/composer.lock
-      #- ./docker/composer.phar:/usr/local/apache2/composer
+      - ./docker/composer.phar:/usr/local/apache2/composer
+    environment:
+      - PHP_IDE_CONFIG=serverName=local.www.nl
+      - sendmail_path="/usr/sbin/sendmail -t"
+      - SMTPHOST=mailhog:1025
+    extra_hosts:
+      - host.docker.internal:host-gateway
     networks:
       static-network:
-        ipv4_address: "192.168.0.6"
+        ipv4_address: 192.168.0.1
 
-    db:
-        image: mariadb:10.6.2
-        volumes:
-            - ./docker/db:/var/lib/mysql
-        environment:
-            - MYSQL_ROOT_PASSWORD=123
-            - MYSQL_DATABASE=dbname
-            - MYSQL_USER=dbuser
-            - MYSQL_PASSWORD=123
-        networks:
-            static-network:
-                ipv4_address: "192.168.0.10"
+   db:
+     image: mariadb:10.6.2
+     volumes:
+       - ./docker/db:/var/lib/mysql
+     environment:
+       - MYSQL_ROOT_PASSWORD=123
+       - MYSQL_DATABASE=dbname
+       - MYSQL_USER=dbuser
+       - MYSQL_PASSWORD=123
+     networks:
+       static-network:
+         ipv4_address: 192.168.0.10
 
-#    db:
-#      image: mysql:5
-#      command: --sql_mode=""
-#      ulimits:
-#        nofile: 102400
-#      volumes:
-#        - ./docker/mysql:/var/lib/mysql
-#      environment:
-#        - MYSQL_ROOT_PASSWORD=123
-#        - MYSQL_DATABASE=dbname
-#        - MYSQL_USER=dbuser
-#        - MYSQL_PASSWORD=123
-#      networks:
-#        static-network:
-#          ipv4_address: "192.168.0.10"
-
+#   redis:
+#     image: redis
+#     ports:
+#       - '6379:6379'
+#     command: redis-server --save 20 1 --loglevel warning --requirepass [password here]
+#     networks:
+#       static-network:
+#         ipv4_address: 192.168.0.12
+#
+#
+# http://192.168.0.11:8025/
+#   mailhog:
+#     image: mailhog/mailhog
+#     logging:
+#       driver: 'none'
+#     ports:
+#       - 1025:1025
+#       - 28025:8025
+#     networks:
+#       static-network:
+#         ipv4_address: 192.168.0.11
+#
 #   elasticsearch1:
 #    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.3.0
 #    environment:
@@ -84,7 +80,7 @@ services:
 #      - ./docker/elasticsearch1:/usr/share/elasticsearch/data
 #    networks:
 #      static-network:
-#        ipv4_address: "192.168.0.7"
+#        ipv4_address: 192.168.0.7
 #
 #   elasticsearch2:
 #    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.3.0
@@ -102,22 +98,22 @@ services:
 #      - ./docker/elasticsearch2:/usr/share/elasticsearch/data
 #    networks:
 #      static-network:
-#        ipv4_address: "192.168.0.8"
+#        ipv4_address: 192.168.0.8
 #
 #   kibana:
 #    image: docker.elastic.co/kibana/kibana-oss:6.3.0
 #    environment:
-#      SERVER_NAME: "kibana.${HOSTNAME}"
-#      ELASTICSEARCH_URL: http://${IPADDRESS}.7:9200
+#      SERVER_NAME: "kibana.local.www.nl"
+#      ELASTICSEARCH_URL: elasticsearch1:9200
 #      ELASTICSEARCH_USERNAME: "elastic"
 #      ELASTICSEARCH_PASSWORD: "changeme"
 #    networks:
 #      static-network:
-#        ipv4_address: "192.168.0.9"
+#        ipv4_address: 192.168.0.9
 
 networks:
   static-network:
     ipam:
       config:
-        - subnet: "192.168.0.0/28"
+        - subnet: 192.168.0.0/28
 
