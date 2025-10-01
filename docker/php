@@ -1,16 +1,20 @@
-FROM php:8-fpm-alpine
-RUN apk add --no-cache imagemagick imagemagick-dev bash pngcrush optipng=0.7.7-r0 zlib-dev icu-dev freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev g++ make autoconf libzip-dev \
+FROM php:8.2-fpm-alpine
+RUN apk add --no-cache linux-headers imagemagick libwebp-dev libxpm-dev imagemagick-dev bash pngcrush zlib-dev icu-dev freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev g++ make autoconf libzip-dev gmp gmp-dev \
     && docker-php-source extract \
     && pecl install xdebug imagick \
     && docker-php-ext-enable xdebug imagick \
-    && docker-php-ext-install mysqli pdo_mysql zip bcmath \
-    && docker-php-ext-enable pdo_mysql zip \
+    && docker-php-ext-install mysqli pdo_mysql zip gmp bcmath exif \
+    && docker-php-ext-enable pdo_mysql zip sodium exif \
     && docker-php-ext-configure intl \
     && docker-php-ext-install intl \
-    && docker-php-ext-configure gd \
+    && docker-php-ext-configure gd --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype \
     &&  NPROC=$(getconf _NPROCESSORS_ONLN) \
     &&  docker-php-ext-install -j${NPROC} gd \
     &&  apk del --no-cache freetype-dev libpng-dev libjpeg-turbo-dev
 
-RUN apk add gnu-libiconv=1.15-r3 --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.13/community/ --allow-untrusted
-ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
+WORKDIR /usr/local/apache2/
+
+RUN addgroup -g 1000 dockeruser && \
+   adduser -D -u 1000 -G dockeruser dockeruser
+
+USER dockeruser
