@@ -1,5 +1,5 @@
 FROM php:8.2-fpm-alpine
-RUN apk add --no-cache linux-headers imagemagick libwebp-dev libxpm-dev imagemagick-dev bash pngcrush zlib-dev icu-dev freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev g++ make autoconf libzip-dev gmp gmp-dev \
+RUN apk add --no-cache git linux-headers imagemagick libwebp-dev libxpm-dev imagemagick-dev bash pngcrush zlib-dev icu-dev freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev g++ make autoconf libzip-dev gmp gmp-dev \
     && docker-php-source extract \
     && pecl install xdebug imagick \
     && docker-php-ext-enable xdebug imagick \
