@@ -29,7 +29,7 @@ services:
       - host.docker.internal:host-gateway
     networks:
       static-network:
-        ipv4_address: 192.168.0.1
+        ipv4_address: 192.168.0.7
 
    db:
      image: mariadb:10.6.2
