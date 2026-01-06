@@ -19,7 +19,7 @@ services:
     volumes:
       - ./:/usr/local/apache2/
       - ./docker/php.ini:/usr/local/etc/php/conf.d/50-setting.ini
-      - ./docker/composer.phar:/usr/local/apache2/composer
+      - ./docker/composer.phar:/bin/composer
       - ./docker/composer/:/.composer/
     environment:
       - PHP_IDE_CONFIG=serverName=local.www.nl
